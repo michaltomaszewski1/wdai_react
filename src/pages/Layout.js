@@ -6,7 +6,10 @@ function Layout() {
             <nav>
                 <ul>
                     <li>
-                        <Link to="/">Hello</Link>
+                        <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                        <Link to="/hello">Hello</Link>
                     </li>
                     <li>
                         <Link to="/products">Products</Link>
