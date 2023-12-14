@@ -1,27 +1,57 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Product from "../components/Product";
 import '../css/ProductList.css'
-import product from "../components/Product";
 import SortButton from "../components/SortButton";
+import product from "../components/Product";
 
 function ProductList() {
     const [jsonData, setJsonData] = useState(null);
-    const sortButton = document.getElementById('sort-button');
+    const [sortOrder, setSortOrder] = useState(null);
+    const [filter, setFilter] = useState("");
 
     useEffect(() => {
         fetch('https://dummyjson.com/products')
             .then(response => response.json())
             .then(data => setJsonData(data.products))
             .catch(error => console.error(error));
-        // console.log(jsonData);
-    }, [sortButton]);
+    }, []);
+
+    useEffect(() => {
+        if (jsonData == null)
+            return;
+
+        switch (sortOrder) {
+            case null:
+                setJsonData(jsonData.toSorted((a, b) => a.id - b.id))
+                break;
+            case 'asc':
+                setJsonData(jsonData.toSorted(
+                    (a, b) => a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1))
+                break;
+            case 'desc':
+                setJsonData(jsonData.toSorted(
+                    (a, b) => a.title.toLowerCase() > b.title.toLowerCase() ? -1 : 1))
+                break;
+            default:
+                throw new Error();
+        }
+    }, [sortOrder]);
+
+    // useEffect(() => {
+    //     if (jsonData == null)
+    //         return;
+    //
+    //     setJsonData(jsonData.filter((product) => product.title.includes(filter)))
+    // }, [filter]);
 
     return jsonData&&(
         <>
-            <SortButton/>
+            <SortButton sortOrder={sortOrder} setSortOrder={setSortOrder}/>
+            <input type='text' placeholder='wyszukaj'
+                   onChange={(e) => setFilter(e.target.value.toLowerCase())}/>
             <ol id='productList'>
-                {jsonData.map((product) => {
-                    return <Product product={product}/>
+                {jsonData.filter((product => product.title.toLowerCase().includes(filter))).map((product, index) => {
+                    return <Product product={product} key={index}/>
                 })}
             </ol>
         </>

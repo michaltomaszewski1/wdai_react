@@ -1,28 +1,28 @@
-import {useState} from "react";
+import {useCallback, useState} from "react";
 
-function SortButton() {
-    const [order, setOrder] = useState(null);
-    let buttonText = 'sortowanie: brak';
+function SortButton({sortOrder, setSortOrder}) {
+    const [buttonText, setButtonText] = useState('Sortowanie: brak');
+    const setOrder = useCallback(setSortOrder, [setSortOrder]);
 
     function changeOrder() {
-        switch (order) {
+        switch (sortOrder) {
             case null:
                 setOrder('asc');
-                buttonText = 'sortowanie: asc';
+                setButtonText('sortowanie: asc');
                 break;
             case 'asc':
                 setOrder('desc');
-                buttonText = 'sortowanie: desc';
+                setButtonText('sortowanie: desc');
                 break;
             case 'desc':
                 setOrder(null);
-                buttonText = 'sortowanie: brak';
+                setButtonText('sortowanie: brak');
                 break;
             default:
                 throw new Error();
         }
-        console.log(order);
-        console.log(buttonText);
+        // console.log(order);
+        // console.log(buttonText);
     }
     return (
         <button onClick={changeOrder} id='sort-button'>
