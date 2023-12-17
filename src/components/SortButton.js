@@ -1,10 +1,14 @@
 import {useCallback, useState} from "react";
 
-function SortButton({sortOrder, setSortOrder}) {
+function SortButton({sortOrder, setSortOrder, editedItem}) {
     const [buttonText, setButtonText] = useState('Sortowanie: brak');
     const setOrder = useCallback(setSortOrder, [setSortOrder]);
 
     function changeOrder() {
+        if (editedItem != null) {
+            alert("Can't sort list while a product is being edited");
+            return;
+        }
         switch (sortOrder) {
             case null:
                 setOrder('asc');
